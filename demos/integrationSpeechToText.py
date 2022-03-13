@@ -20,7 +20,7 @@ time.sleep(10)
 
 # Record voice via OS record system
 fs = 44100  # Sample rate
-seconds = 10  # Duration of recording
+seconds = 20  # Duration of recording
 
 print("Starting...")
 myrecording = sd.rec(int(seconds * fs), samplerate=fs, channels=2) # Had errors with channel numbers ...try with channel = 1
