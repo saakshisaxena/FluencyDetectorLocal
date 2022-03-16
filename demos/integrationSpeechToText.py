@@ -16,13 +16,16 @@ importlib.import_module('textToSpeechEx')
 
 # add delay so that we can wait for the audio to finish and then start recordign the response of the User
 import time
-time.sleep(10)
+time.sleep(2)
+for i in range(5,0, -1):
+    print(str(i)+"...")
+    time.sleep(1)
 
 # Record voice via OS record system
 fs = 44100  # Sample rate
-seconds = 20  # Duration of recording
+seconds = 5  # Duration of recording
 
-print("Starting...")
+print("Voice recording started!! \nPlease Start Speaking")
 myrecording = sd.rec(int(seconds * fs), samplerate=fs, channels=2) # Had errors with channel numbers ...try with channel = 1
 sd.wait()  # Wait until recording is finished
 print("End of recording...")
@@ -55,7 +58,14 @@ with open('output.txt', 'w') as out:
 
 ################################################
 ###### Run the client side code now for socket to talk to py2 server
-import importlib
-importlib.import_module('client')
+# import importlib
+# importlib.import_module('client')
+from Client import Client
+
+client = Client()
+client.connect()
+client.sendData()
+client.getData()
+client.closeAndPrint()
 #############################################
 #############################################

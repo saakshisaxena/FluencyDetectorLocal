@@ -1,15 +1,25 @@
 import socket
 
-client = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
-client.connect(('127.0.0.1', 8888)) # host, port
+class Client:
 
-myString = "I am CLIENT \n"
-byt = myString.encode()
-client.send(byt)
+    client = ""
+    from_server = ""
+    def __init__(self):
+        self.client = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
+        self.from_server = ""
 
-from_server = client.recv(4096)
-from_server = from_server.decode()
+    def connect(self):
+        self.client.connect(('127.0.0.1', 8888)) # host, port
 
-client.close()
+    def sendData(self):
+        myString = "I am CLIENT \n"
+        byt = myString.encode()
+        self.client.send(byt)
 
-print(from_server)
+    def getData(self):
+        self.from_server = self.client.recv(4096)
+        self.from_server = self.from_server.decode()
+
+    def closeAndPrint(self):
+        self.client.close()
+        print(self.from_server)

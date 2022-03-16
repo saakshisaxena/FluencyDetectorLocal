@@ -11,6 +11,8 @@ serv.listen(5)
 #DOESN'T WORK!!!!!!!!!!!!
 import signal
 import sys
+import importlib
+from demo2 import demo2
 
 def signal_handler(sig, frame):
     print('You pressed Ctrl+C!')
@@ -27,13 +29,15 @@ while True:
     while True:
         data = conn.recv(4096)
         data = data.decode()
-        if not data: break
+        if not data:
+            break
         from_client = data
         print(from_client)
 
 # run demo2 from deep Disfluency
-        import importlib
-        importlib.import_module('demo2')
+        # importlib.import_module('demo2')
+        d=demo2()
+        d.run()
 
 
         myStr = "I am SERVER \n"
