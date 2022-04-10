@@ -103,7 +103,7 @@ while(not correctAnswer):
         y = []
         for line in open("disfluencyScoreTracker.txt", 'r'):
             y.append(int(line)) # score
-        x = range(len(y))
+        x = range(1, len(y)+1)
 
         plt.title("Disfluency Score Tracking")
         plt.xlabel('Attempt number')

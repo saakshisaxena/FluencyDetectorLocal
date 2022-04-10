@@ -1,10 +1,6 @@
-Short Summary: 
- {'um': 3, 'well': 1, 'uh': 1}
-Details of Repair in sentences: 
-20. Mistake: I I um 	 Correction: I 	 In the sentence: I I um I study Computer Science at Queen Bareey uh Mary University of London. 
-10. Mistake: you um 	 Correction: have 	 In the sentence: I hope you um have been doing well um no great. 
-15. Mistake: have been doing well um 	 Correction: no great. I I 	 In the sentence: I hope you um have been doing well um no great. 
-18. Mistake: I 	 Correction: I 	 In the sentence: I I um I study Computer Science at Queen Bareey uh Mary University of London. 
-16. Mistake: doing well um no 	 Correction: great. I I 	 In the sentence: I hope you um have been doing well um no great. 
-Naive Fluency Score: 56
-Dislfuency Score: 31
+Short Summary:
+ {'um': 1, 'uh': 1}
+Details of Repair in sentences:
+11. Mistake: that kind 	 Correction: when one. 	 In the sentence: that kind when one.
+Naive Fluency Score: 53
+Disfluency Score: 23

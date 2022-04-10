@@ -12,7 +12,8 @@ serv.listen(5)
 import signal
 import sys
 import importlib
-from demo2 import demo2
+# from demo2 import demo2
+from demo3 import demo3
 
 def signal_handler(sig, frame):
     print('You pressed Ctrl+C!')
@@ -36,7 +37,7 @@ while True:
 
 # run demo2 from deep Disfluency
         # importlib.import_module('demo2')
-        d=demo2()
+        d=demo3()
         d.run()
 
 

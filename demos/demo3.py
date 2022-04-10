@@ -168,7 +168,7 @@ class demo3:
         print("Dislfuency Score: "+str(disfluencyScore))
 
         toSave+="Naive Fluency Score: "+str(naive_fluency_score)+"\n"
-        toSave+="Dislfuency Score: "+str(disfluencyScore)+"\n"
+        toSave+="Disfluency Score: "+str(disfluencyScore)+"\n"
         #######################################
         ### Save feedback in a text file ######
         with open('feedback.txt', 'w') as out:
