@@ -1,5 +1,6 @@
-Short Summary:
+Short Summary: 
  {'uh': 2}
 Details of Repair in sentences: 
-1. Mistake+Correction: the the  	 In the sentence: the the things they asked to talk about were whether the uh whether the judge should be the one that does the uh sentencing
-12. Mistake+Correction: whether the uh whether the  	 In the sentence: the the things they asked to talk about were whether the uh whether the judge should be the one that does the uh sentencing
+1. Mistake: the 	 Correction: the 	 In the sentence: the the things they asked to talk about were whether the uh whether the judge should be the one that does the uh sentencing 
+12. Mistake: whether the uh 	 Correction: whether the 	 In the sentence: the the things they asked to talk about were whether the uh whether the judge should be the one that does the uh sentencing 
+Naive Fluency Score: 66

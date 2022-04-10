@@ -23,7 +23,7 @@ for i in range(5,0, -1):
 
 # Record voice via OS record system
 fs = 44100  # Sample rate
-seconds = 60  # Duration of recording
+seconds = 10  # Duration of recording
 
 print("Voice recording started!! \nPlease Start Speaking")
 myrecording = sd.rec(int(seconds * fs), samplerate=fs, channels=2) # Had errors with channel numbers ...try with channel = 1
@@ -56,6 +56,29 @@ transcript = ". ".join([res['results'][i]['alternatives'][0]['transcript'].strip
 with open('output.txt', 'w') as out:
      out.writelines(transcript)
 
+################################################
+#ASK THE USER IF THEY WANT TO MAKE ANY CHANGES TO THE SPEECH TO TEXT OUTPUT FILE BEFORE RUNNING THE CLIENT
+#########################################################
+changeText = input("Would you like to see and make changes to the speech to text output? [Y/n]").lower()
+correctAnswer = False
+while(not correctAnswer):
+    if changeText=="n":
+        print("Analysing your speech~")
+        correctAnswer=True
+    elif changeText=="y":
+        #### do smth#####Open the text file in notepad
+        # import webbrowser
+        # webbrowser.open("output.txt")
+        ###### Open the file and wait for the user to finish editing the file.
+        print("Please save and close the notepad file after you are done cheking / making chnages, to get the feedback.")
+        import subprocess
+        p = subprocess.Popen(('notepad',"output.txt"))
+        p.wait()
+        print("Analysing your speech~")
+        correctAnswer=True
+    else:
+        print("'Y' or 'n' for yes/no")
+        changeText = input("[Y/n]").lower()
 ################################################
 ###### Run the client side code now for socket to talk to py2 server
 # import importlib
