@@ -70,7 +70,7 @@ while(not correctAnswer):
         # import webbrowser
         # webbrowser.open("output.txt")
         ###### Open the file and wait for the user to finish editing the file.
-        print("Please save and close the notepad file after you are done cheking / making chnages, to get the feedback.")
+        print("Please save and close the notepad file after you are done cheking / making changes, to get the feedback.")
         import subprocess
         p = subprocess.Popen(('notepad',"output.txt"))
         p.wait()
@@ -92,3 +92,32 @@ client.getData()
 client.closeAndPrint()
 #############################################
 #############################################
+
+###Plot a graph of disfluency SCORE
+showScoreTracker = input("Would you like to see your progress/ score tracker [y/n]").lower()
+correctAnswer=False
+while(not correctAnswer):
+    if showScoreTracker=="y":
+        import matplotlib.pyplot as plt
+        x = [] # attemp number
+        y = []
+        for line in open("disfluencyScoreTracker.txt", 'r'):
+            y.append(int(line)) # score
+        x = range(len(y))
+
+        plt.title("Disfluency Score Tracking")
+        plt.xlabel('Attempt number')
+        plt.ylabel('Score')
+        plt.yticks(y)
+        plt.plot(x, y, marker = 'o', c = 'g')
+
+        plt.show()
+        correctAnswer=True
+
+    elif showScoreTracker=="n":
+        print("Bye")
+        correctAnswer=True
+
+    else:
+        print("'Y' or 'n' for yes/no")
+        showScoreTracker = input("[Y/n]").lower()

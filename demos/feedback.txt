@@ -1,11 +1,10 @@
 Short Summary: 
- {'um': 2, 'sentencing.': 1, 'uh': 2, 'mean': 1}
+ {'um': 3, 'well': 1, 'uh': 1}
 Details of Repair in sentences: 
-25. Mistake: I 	 Correction: I 	 In the sentence: I I I um I go to Queen Mary University of London. 
-26. Mistake: I I 	 Correction: I 	 In the sentence: I I I um I go to Queen Mary University of London. 
-12. Mistake: whether the uh 	 Correction: whether the 	 In the sentence: the the things they asked to talk about were whether the uh whether the judge should be the one that does the uh sentencing. 
-42. Mistake: was um I mean 	 Correction: that it 	 In the sentence: Last night was um I mean that it was a really good evening. 
-28. Mistake: I I I um 	 Correction: I 	 In the sentence: I I I um I go to Queen Mary University of London. 
-1. Mistake: the 	 Correction: the 	 In the sentence: the the things they asked to talk about were whether the uh whether the judge should be the one that does the uh sentencing. 
-Naive Fluency Score: 59
-Dislfuency Score: 24
+20. Mistake: I I um 	 Correction: I 	 In the sentence: I I um I study Computer Science at Queen Bareey uh Mary University of London. 
+10. Mistake: you um 	 Correction: have 	 In the sentence: I hope you um have been doing well um no great. 
+15. Mistake: have been doing well um 	 Correction: no great. I I 	 In the sentence: I hope you um have been doing well um no great. 
+18. Mistake: I 	 Correction: I 	 In the sentence: I I um I study Computer Science at Queen Bareey uh Mary University of London. 
+16. Mistake: doing well um no 	 Correction: great. I I 	 In the sentence: I hope you um have been doing well um no great. 
+Naive Fluency Score: 56
+Dislfuency Score: 31

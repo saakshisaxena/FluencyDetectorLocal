@@ -174,3 +174,8 @@ class demo3:
         with open('feedback.txt', 'w') as out:
             out.writelines(toSave)
              # out.writelines(str(map))
+        ########################################
+        ##### Write to tracking files
+        ## use "a" to append the file
+        with open("disfluencyScoreTracker.txt", "a") as disfluencyScoreTrackerFile:
+            disfluencyScoreTrackerFile.write(str(disfluencyScore)+"\n")
