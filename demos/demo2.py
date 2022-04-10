@@ -37,6 +37,7 @@ class demo2:
         # Set diff_only to False if you want the whole utterance's tag each time
         with_pos = False
         text=""
+        total_words=0
         print "tagging..."
         if with_pos:
             # if POS is provided use this:
@@ -55,6 +56,7 @@ class demo2:
                     # reading each word
                     for word in line.split():
                         # displaying the words
+                        total_words+=1
                         if word=="%HESITATION" or word=="%HESITATION." :
                             text+="uh"+" "
                             print self.disf.tag_new_word("uh")
@@ -81,3 +83,8 @@ class demo2:
         print(map)
         with open('map.txt', 'w') as out:
              out.writelines(str(map))
+        if '<f/>' in map.keys():
+            naive_fluency_score = int(map['<f/>'])*100/total_words
+        else:
+            naive_fluency_score = 0
+        print("Naive fluency score: ", naive_fluency_score)

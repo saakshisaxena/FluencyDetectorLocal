@@ -23,7 +23,7 @@ for i in range(5,0, -1):
 
 # Record voice via OS record system
 fs = 44100  # Sample rate
-seconds = 5  # Duration of recording
+seconds = 60  # Duration of recording
 
 print("Voice recording started!! \nPlease Start Speaking")
 myrecording = sd.rec(int(seconds * fs), samplerate=fs, channels=2) # Had errors with channel numbers ...try with channel = 1

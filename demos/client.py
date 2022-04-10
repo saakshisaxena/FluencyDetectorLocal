@@ -9,7 +9,7 @@ class Client:
         self.from_server = ""
 
     def connect(self):
-        self.client.connect(('127.0.0.1', 8888)) # host, port
+        self.client.connect(('127.0.0.1', 8000)) # host, port
 
     def sendData(self):
         myString = "I am CLIENT \n"
