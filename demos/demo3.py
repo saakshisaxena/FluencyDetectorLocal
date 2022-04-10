@@ -96,7 +96,6 @@ class demo3:
 
             tags = t.split(">")
             tags.pop() # as the last one is always blank
-            print(tags)
             number_of_tags = len(t.split(">"))
 
             # if number_of_tags<=1: # Works only if each word has less than one tag ############
@@ -158,7 +157,18 @@ class demo3:
         else:
             naive_fluency_score = 0
         print("Naive fluency score: ", naive_fluency_score)
+        ####Dislfuency SCORE
+        ########
+        totalDifluencyCount=0
+        for k in edit_Terms.keys():
+            totalDifluencyCount+=edit_Terms[k]
+        totalDifluencyCount+=len(rmStart) # how many mistakes and Correction
+
+        disfluencyScore=(totalDifluencyCount*100)/len(words)
+        print("Dislfuency Score: "+str(disfluencyScore))
+
         toSave+="Naive Fluency Score: "+str(naive_fluency_score)+"\n"
+        toSave+="Dislfuency Score: "+str(disfluencyScore)+"\n"
         #######################################
         ### Save feedback in a text file ######
         with open('feedback.txt', 'w') as out:

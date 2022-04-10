@@ -1,6 +1,11 @@
 Short Summary: 
- {'uh': 2}
+ {'um': 2, 'sentencing.': 1, 'uh': 2, 'mean': 1}
 Details of Repair in sentences: 
-1. Mistake: the 	 Correction: the 	 In the sentence: the the things they asked to talk about were whether the uh whether the judge should be the one that does the uh sentencing 
-12. Mistake: whether the uh 	 Correction: whether the 	 In the sentence: the the things they asked to talk about were whether the uh whether the judge should be the one that does the uh sentencing 
-Naive Fluency Score: 66
+25. Mistake: I 	 Correction: I 	 In the sentence: I I I um I go to Queen Mary University of London. 
+26. Mistake: I I 	 Correction: I 	 In the sentence: I I I um I go to Queen Mary University of London. 
+12. Mistake: whether the uh 	 Correction: whether the 	 In the sentence: the the things they asked to talk about were whether the uh whether the judge should be the one that does the uh sentencing. 
+42. Mistake: was um I mean 	 Correction: that it 	 In the sentence: Last night was um I mean that it was a really good evening. 
+28. Mistake: I I I um 	 Correction: I 	 In the sentence: I I I um I go to Queen Mary University of London. 
+1. Mistake: the 	 Correction: the 	 In the sentence: the the things they asked to talk about were whether the uh whether the judge should be the one that does the uh sentencing. 
+Naive Fluency Score: 59
+Dislfuency Score: 24
