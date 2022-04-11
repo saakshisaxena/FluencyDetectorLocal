@@ -1,6 +1,2 @@
-Short Summary:
- {'um': 1, 'uh': 1}
-Details of Repair in sentences:
-11. Mistake: that kind 	 Correction: when one. 	 In the sentence: that kind when one.
-Naive Fluency Score: 53
-Disfluency Score: 23
+Naive Fluency Score: 100
+Disfluency Score: 0

@@ -46,9 +46,28 @@ stt = SpeechToTextV1(authenticator=authenticator)
 stt.set_service_url(url)
 
 # Perform conversion
-with open('myfile.mp3', 'rb') as f:
-    res = stt.recognize(audio=f, content_type='audio/mp3', model='en-US_NarrowbandModel').get_result()
+with open('output.wav', 'rb') as f:
+    res = stt.recognize(audio=f, content_type='audio/wav', model='en-GB_Telephony', inactivity_timeout=60, speech_detector_sensitivity=1.0, background_audio_suppression=0.5, timestamps=True).get_result()
 
+print(res)
+''' Result of stt.recognize(audio=f, content_type='audio/wav', model='en-GB_Telephony', inactivity_timeout=60, speech_detector_sensitivity=1.0, background_audio_suppression=0.5, timestamps=True).get_result()
+{'result_index': 0,
+'results':
+    [{'final': True, 'alternatives': [{'transcript': 'uh ', 'confidence': 0.63, 'timestamps': [['uh', 1.14, 1.48]]}]},
+     {'final': True, 'alternatives': [{'transcript': 'okay ', 'confidence': 0.58, 'timestamps': [['okay', 6.12, 6.12]]}]},
+     {'final': True, 'alternatives': [{'transcript': 'who says you are not perfect ', 'confidence': 0.73, 'timestamps': [['who', 6.38, 6.58], ['says', 6.7, 7.1], ['you', 7.18, 7.24], ['are', 7.28, 7.4], ['not', 7.52, 7.72], ['perfect', 7.92, 9.12]]}]},
+     {'final': True, 'alternatives': [{'transcript': 'who is ', 'confidence': 0.68, 'timestamps': [['who', 9.74, 9.86], ['is', 9.9, 9.94]]}]}
+     ]
+}
+'''
+wordsWithTimeStamp = ""
+for i in range(0,len(res['results'])):
+    for j in range(0, len(res['results'][i]['alternatives'][0]['timestamps'])):
+        print(res['results'][i]['alternatives'][0]['timestamps'][j])
+    # for j in range(0, len(res(['results'][i]['alternatives'][2]['timestamps']))):
+    #     wordsWithTimeStamp += res['results'][i]['alternatives'][2]['timestamps'][j] +"\n"
+
+# print(wordsWithTimeStamp)
 print(len(res['results']), "segments")
 transcript = ". ".join([res['results'][i]['alternatives'][0]['transcript'].strip() \
                         for i in range(0,len(res['results']))])

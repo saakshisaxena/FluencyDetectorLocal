@@ -107,7 +107,7 @@ def randomQuesGenerator():
         elif themeSelected==5:
             question = fun[x]
             correctAnswer=True
-        elif themeSelected==2:
+        elif themeSelected==6:
             question = interesting[x]
             correctAnswer=True
         else:
