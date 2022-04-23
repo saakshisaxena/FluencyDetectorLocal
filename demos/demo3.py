@@ -167,8 +167,12 @@ class demo3(disfluencyTagger):
                 ######## if asked for the mistake and the correction
                 for i in range(self.rmStart[key], self.rpStart[key]):
                     mistake+=self.words[i]+" "
-                for i in range(self.rpStart[key], self.rpEnd[key]+1):
-                    repair+=self.words[i]+" "
+                if self.rpEnd=={}:
+                    for i in range(self.rpStart[key], len(self.words)):
+                        repair+=self.words[i]+" "
+                else:
+                    for i in range(self.rpStart[key], self.rpEnd[key]+1):
+                        repair+=self.words[i]+" "
                 ####### If asked for the sentence in which the repair was done ######
                 for k in range(self.repairSentence[key], len(self.words)):
                     repairSent+=self.words[k]+" "
@@ -183,7 +187,7 @@ class demo3(disfluencyTagger):
             ###############################################################
             ###### Naive FLUENCY SCORE
             if '<f/>' in self.map.keys(): # set a weighted values for fluency score
-                naive_fluency_score = int(self.map['<f/>'])*100/total_words
+                naive_fluency_score = int(self.map['<f/>'])*100/len(self.words)
             else:
                 naive_fluency_score = 0
             print("Naive fluency score: ", naive_fluency_score)

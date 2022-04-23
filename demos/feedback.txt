@@ -1,2 +1,1 @@
-Naive Fluency Score: 100
-Disfluency Score: 0
+total time taken for speech28.020000000000003
