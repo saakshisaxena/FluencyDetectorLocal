@@ -1,1 +1,1 @@
-total time taken for speech28.020000000000003
+total time taken for speech0.11700000000000002

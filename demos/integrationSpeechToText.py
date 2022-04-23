@@ -33,7 +33,7 @@ for i in range(5,0, -1):
 
 # Record voice via OS record system
 fs = 44100  # Sample rate
-seconds = 30  # Duration of recording
+seconds = 10  # Duration of recording
 
 print("Voice recording started!! \nPlease Start Speaking")
 speech.speak("Voice recording started. \n Please Start Speaking After this message ends.")
@@ -76,8 +76,10 @@ with open('output.wav', 'rb') as f:
     #     wordsWithTimeStamp += res['results'][i]['alternatives'][2]['timestamps'][j] +"\n"
 
 totalTimeTaken = float(res['results'][len(res['results'])-1]['alternatives'][0]['timestamps'][len(res['results'][len(res['results'])-1]['alternatives'][0]['timestamps'])-1][2]) - float(res['results'][0]['alternatives'][0]['timestamps'][0][1])
-print("total time taken for speech"+str(totalTimeTaken))
-speech.speak("Total time taken for your speech is "+str(totalTimeTaken)+" seconds")
+totalTimeTaken = totalTimeTaken/60 # convert it to minutes
+totalTime = float(int(totalTimeTaken*100)/100.0) # convert it to only 2 decimal places
+print("total time taken for speech "+str(totalTime))
+speech.speak("Total time taken for your speech is "+str(totalTime)+" minutes")
 ### Save feedback in a text file ######
 with open('feedback.txt', 'w') as out:
     out.writelines("total time taken for speech"+str(totalTimeTaken))
@@ -161,7 +163,7 @@ while(not correctAnswer):
 
 #######Ask if they want to listen to their speech
 print("Would you like to listen to your speech again [y/n] \n The audio will only be available for this current session: ")
-listenToSpeech = speech.listen("Would you like to listen to your speech that was recorded [y/n] \n The audio will only be available for this current session. Say yes ir no. ").lower()
+listenToSpeech = speech.listen("Would you like to listen to your speech that was recorded \n The audio will only be available for this current session. Say yes or no. ").lower()
 correctAnswer=False
 while(not correctAnswer):
     if listenToSpeech=="yes":
@@ -169,7 +171,7 @@ while(not correctAnswer):
         from playsound import playsound
 
         # for playing note.wav file
-        playsound('myfile.mp3')
+        playsound('output.wav')
 
         print("bye~")
         speech.speak("Goodbye")
@@ -181,5 +183,5 @@ while(not correctAnswer):
         correctAnswer=True
 
     else:
-        print("'Y' or 'n' for yes/no")
+        print("yes or no")
         listenToSpeech = speech.listen("Say yes ir no. ").lower()
