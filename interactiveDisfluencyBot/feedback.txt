@@ -1,0 +1,18 @@
+Edit terms used: 
+ {'um': 1, 'uh': 1, 'know': 1}
+
+Types of repairs detected: 
+
+Repetition repairs: 
+1. 
+Word: that 	 
+Repitition: that 	 
+In the sentence: especially when we went fishing ice fishing maybe that we did that that was crazy when we did that in the summer that's how crazy it was it was amazing very memorable um. 
+2. 
+Word: it was 	 
+Repitition: it was 	 
+In the sentence: especially when we went fishing ice fishing maybe that we did that that was crazy when we did that in the summer that's how crazy it was it was amazing very memorable um. 
+
+Naive Fluency Score: 87.83
+
+Disfluency Score: 6
