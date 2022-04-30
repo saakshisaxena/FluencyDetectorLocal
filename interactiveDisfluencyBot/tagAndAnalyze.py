@@ -53,29 +53,21 @@ class tagAndAnalyze(disfluencyTagger):
         text=""
         total_words=0
         print "tagging..."
-        if with_pos:
-            # if POS is provided use this:
-            print self.disf.tag_new_word("john", pos="NNP")
-            print self.disf.tag_new_word("likes", pos="VBP")
-            print self.disf.tag_new_word("uh", pos="UH")
-            print self.disf.tag_new_word("loves", pos="VBP")
-            print self.disf.tag_new_word("mary", pos="NNP")
-        else:
-            # opening the text file
-            with open('output.txt','r') as file:
-                # reading each line
-                for line in file:
-                    # reading each word
-                    for word in line.split():
-                        # tag and save each word
-                        total_words+=1
-                        # if there is a hesitation found change it to uh ###can be caused by STT API settings variation
-                        if word=="%HESITATION" or word=="%HESITATION." :
-                            text+="uh"+" "
-                            print self.disf.tag_new_word("uh")
-                        else:
-                            text+=word+" "
-                            print self.disf.tag_new_word(word)
+        # opening the text file
+        with open('output.txt','r') as file:
+            # reading each line
+            for line in file:
+                # reading each word
+                for word in line.split():
+                    # tag and save each word
+                    total_words+=1
+                    # if there is a hesitation found change it to uh ###can be caused by STT API settings variation
+                    if word=="%HESITATION" or word=="%HESITATION." :
+                        text+="uh"+" "
+                        print self.disf.tag_new_word("uh")
+                    else:
+                        text+=word+" "
+                        print self.disf.tag_new_word(word)
 
         print "final tags:"
         for w, t in zip(text.split(), self.disf.output_tags): # go through all words and their tags

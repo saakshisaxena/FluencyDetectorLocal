@@ -1,4 +1,5 @@
 import matplotlib.pyplot as plt
+import math
 from pathlib import Path
 from playsound import playsound
 from pydub import AudioSegment
@@ -10,7 +11,7 @@ import time
 
 from Client import Client
 from feedback import feedback
-from randomQuestionGenerator import randomQuestionGenerator
+from TableTopicsMaster import TableTopicsMaster
 from speech import speech
 
 from ibm_cloud_sdk_core.authenticators import IAMAuthenticator
@@ -21,12 +22,11 @@ from ibm_watson import SpeechToTextV1
 speech = speech()
 
 # To give user options of themes and speak out the final question the user needs to speak on:
-randomQuestionGenerator = randomQuestionGenerator()
-randomQuestionGenerator.randomQuesGenerator()
+tableTopicsMaster = TableTopicsMaster()
+tableTopicsMaster.randomQuestionGenerator()
 
 # add delay so that the user gets time to grasp the question and make mental notes for a short time
-time.sleep(2)
-speech.speak("You need to speak for a minimum of 1 and a half minutes on the given question. The recording window will be for 2 minutes. Get ready to speak in")
+speech.speak("You need to speak for a minimum of 1 and a half minutes on the given question. Get ready to speak in")
 for i in range(5,0, -1):
     print(str(i)+"...")
     speech.speak(i)
@@ -34,11 +34,14 @@ for i in range(5,0, -1):
 
 # Record voice via OS record system
 fs = 44100  # Sample rate
-seconds = 30  # Duration of recording # in seconds
+seconds = 40  # Duration of recording # in seconds
 
 print("Voice recording started!! \nPlease Start Speaking") # To print on console
 speech.speak("Voice recording started.")
+
 myrecording = sd.rec(int(seconds * fs), samplerate=fs, channels=2) # Try changing channel numbers if channels are busy or unavailable for audio recording.
+# for i in range(1, 120):
+#     print(str(i)+"...")
 sd.wait()  # Wait until recording is finished
 print("End of recording...")
 speech.speak("Voice recording stopped. Well done!")
@@ -58,49 +61,57 @@ with open('output.wav', 'rb') as f:
     res = stt.recognize(audio=f, content_type='audio/wav', model='en-GB_Telephony', inactivity_timeout=60, speech_detector_sensitivity=1.0, background_audio_suppression=0.5, timestamps=True, smart_formatting=True).get_result()
 
 totalTimeTaken = float(res['results'][len(res['results'])-1]['alternatives'][0]['timestamps'][len(res['results'][len(res['results'])-1]['alternatives'][0]['timestamps'])-1][2]) - float(res['results'][0]['alternatives'][0]['timestamps'][0][1])
-totalTimeTaken = totalTimeTaken/60 # convert it to minutes
-totalTime = float(int(totalTimeTaken*100)/100.0) # convert it to only 2 decimal places
-print("Total Time Taken for Speech "+str(totalTime))
-speech.speak("Total time taken for your speech is "+str(totalTime)+" minutes")
+# totalTimeTaken = totalTimeTaken/60 # convert it to minutes
+totalTime = float(int((totalTimeTaken/60)*100)/100.0) # convert it to only 2 decimal places
+if totalTime<1.0:
+    seconds = totalTimeTaken
+    print("Total Time Taken for Speech "+str(int(seconds))+" seconds")
+    speech.speak("Total Time Taken for Speech "+str(int(seconds))+" seconds")
+    # Save timeTaken in feedback text file
+    with open('feedback.txt', 'w') as out:
+        out.writelines("Short Summary: \n Total Time Taken for Speech "+str(int(seconds))+" seconds \n")
+else:
+    minutes, seconds = divmod(int(totalTime * 60), 60)
+    print("Total Time Taken for Speech "+str(int(minutes))+" minutes and "+str(int(seconds))+" seconds")
+    speech.speak("Total Time Taken for Speech "+str(int(minutes))+" minutes and "+str(int(seconds))+" seconds")
+    # Save timeTaken in feedback text file
+    with open('feedback.txt', 'w') as out:
+        out.writelines("Short Summary: \n Total time taken for speech "+str(int(minutes))+" minutes and "+str(int(seconds))+" seconds \n")
 
-# Save timeTaken in feedback text file
-with open('feedback.txt', 'w') as out:
-    out.writelines("Short Summary: \n total time taken for speech "+str(totalTimeTaken)+"\n")
 
-print(len(res['results']), "segments")
 transcript = ". ".join([res['results'][i]['alternatives'][0]['transcript'].strip() \
                         for i in range(0,len(res['results']))])
 
 # write the speech converted text in a text file
 with open('output.txt', 'w') as out:
      out.writelines(transcript)
-
-################################################
-#ASKING THE USER IF THEY WANT TO MAKE ANY CHANGES TO THE SPEECH TO TEXT OUTPUT FILE BEFORE RUNNING THE CLIENT
-#########################################################
-print("Would you like to see and make changes to the speech to text output?")
-changeText = speech.listen("Would you like to see and make changes to the speech to text output? Say 'yes' or 'no'").lower()
-correctAnswer = False
-while(not correctAnswer):
-    if changeText=="no":
-        print("Analysing your speech~")
-        speech.speak("Analysing your speech~")
-        correctAnswer=True
-    elif changeText=="yes":
-        ###### Open the file in notepad and wait for the user to finish editing the file.
-        print("Please save and close the notepad file after you are done cheking / making changes, to get the feedback.")
-        speech.speak("Opening the file in notepad. Please save and close the notepad file after you are done cheking / making changes to progress.")
-
-        p = subprocess.Popen(('notepad',"output.txt"))
-        p.wait()
-        print("Analysing your speech~")
-        speech.speak("Analysing your speech~")
-        correctAnswer=True
-    else:
-        changeText = speech.listen("Say 'yes' or 'no'").lower()
-        print("Say 'yes' or 'no'[Y/n]")
-
-################################################
+#
+# ################################################
+# #ASKING THE USER IF THEY WANT TO MAKE ANY CHANGES TO THE SPEECH TO TEXT OUTPUT FILE BEFORE RUNNING THE CLIENT
+# #########################################################
+# print("Would you like to see and make changes to the speech to text output?")
+# changeText = speech.listen("Would you like to see and make changes to the speech to text output? Say 'yes' or 'no'").lower()
+# correctAnswer = False
+# while(not correctAnswer):
+#     if changeText=="no":
+#         print("Analysing your speech~")
+#         speech.speak("Analysing your speech~")
+#         correctAnswer=True
+#     elif changeText=="yes":
+#         ###### Open the file in notepad and wait for the user to finish editing the file.
+#         print("Please save and close the notepad file after you are done cheking / making changes, to get the feedback.")
+#         speech.speak("Opening the file in notepad. Please save and close the notepad file after you are done cheking / making changes to progress.")
+#
+#         p = subprocess.Popen(('notepad',"output.txt"))
+#         p.wait()
+#         print("Analysing your speech~")
+#         speech.speak("Analysing your speech~")
+#         correctAnswer=True
+#     else:
+#         changeText = speech.listen("Say 'yes' or 'no'").lower()
+#         print("Say 'yes' or 'no'[Y/n]")
+#
+# ################################################
 ###### Run the client side code now for socket to talk to py2 server
 client = Client()
 client.connect()
@@ -112,9 +123,10 @@ client.closeAndPrint()
 #############################################
 ###Read the Feedback
 feedback = feedback()
+feedback.getAndSaveFeedbackWithScore()
 
 print("Do you want to read all feedback at once or go through it in steps? Say yes or no")
-readAll = speech.listen("Do you want to read all feedback at once? Say yes or no").lower()
+readAll = speech.listen("Do you want to read all feedback at once or go through it in steps? Say yes, to read feedback altogether, or no, to go through it in steps.").lower()
 correctAnswer=False
 while(not correctAnswer):
     if readAll=="yes":
@@ -125,7 +137,7 @@ while(not correctAnswer):
     elif readAll=="no":
         print("Okay here is a short summary with types of repairs found:")
         speech.speak("Okay, here is a short summary with types of repairs found:")
-        feedback.shortSummary(totalTime)
+        feedback.shortSummary(totalTime, totalTimeTaken)
         correctAnswer=True
         feedback.detailedReport()
 
@@ -161,13 +173,13 @@ while(not correctAnswer):
         correctAnswer=True
 
     else:
-        print("'Y' or 'n' for yes/no")
-        showScoreTracker = speech.listen("Say 'yes' or 'no' [y/n]").lower()
+        print("yes/no")
+        showScoreTracker = speech.listen("Say yes or no").lower()
 
 ################################################
 #################################################
 #######Ask if they want to listen to their speech
-print("Would you like to listen to your speech again [y/n] \n The audio will only be available for this current session: ")
+print("Would you like to listen to your speech again [yes/no] \n The audio will only be available for this current session: ")
 listenToSpeech = speech.listen("Would you like to listen to your speech that was recorded \n The audio will only be available for this current session. Say yes or no. ").lower()
 correctAnswer=False
 while(not correctAnswer):
@@ -179,17 +191,14 @@ while(not correctAnswer):
 
         print("bye~")
         speech.speak("Finished playing the recording.")
-        speech.speak("Goodbye")
         correctAnswer=True
 
     elif listenToSpeech=="no":
-        print("Bye")
-        speech.speak("Goodbye")
         correctAnswer=True
 
     else:
         print("yes or no")
         listenToSpeech = speech.listen("Say yes or no").lower()
 
-
-##############   EXIT   ####################
+##############   END   ####################
+speech.speak("Goodbye")

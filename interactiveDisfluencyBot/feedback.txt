@@ -1,18 +1,23 @@
-Edit terms used: 
- {'um': 1, 'uh': 1, 'know': 1}
+No edit terms used 
 
 Types of repairs detected: 
 
+Substitution repairs: 
+1. 
+Mistake: it was 	 
+Correction: it's it's 	 
+In the sentence: it was it's it's not so bad. 
+2. 
+Mistake: to 	 
+Correction: that 	 
+In the sentence: what happened to that anymore people still buy these things. 
+
 Repetition repairs: 
 1. 
-Word: that 	 
-Repitition: that 	 
-In the sentence: especially when we went fishing ice fishing maybe that we did that that was crazy when we did that in the summer that's how crazy it was it was amazing very memorable um. 
-2. 
-Word: it was 	 
-Repitition: it was 	 
-In the sentence: especially when we went fishing ice fishing maybe that we did that that was crazy when we did that in the summer that's how crazy it was it was amazing very memorable um. 
+Word: ever 	 
+Repitition: ever 	 
+In the sentence: the worst mail i have ever ever experienced. 
 
-Naive Fluency Score: 87.83
+Naive Fluency Score: 90.9
 
-Disfluency Score: 6
+Disfluency Score: 3

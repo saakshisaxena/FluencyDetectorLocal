@@ -18,7 +18,7 @@ class speech:
     def listen(self, message):
         global recognizer
 
-        self.speaker.say(message)
+        self.speaker.say(message+" or say 'stop' to end this program.")
         self.speaker.runAndWait()
 
         done = False
@@ -37,6 +37,10 @@ class speech:
 
                     self.speaker.say(f"Option {item} was selected!")
                     self.speaker.runAndWait()
+
+                    if item.lower()=="stop":
+                        self.speak("Goodbye")
+                        sys.exit(0)
 
             except speech_recognition.UnknownValueError:
                 self.recognizer = speech_recognition.Recognizer()

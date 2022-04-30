@@ -8,7 +8,6 @@ class feedback:
         ########## Load data #### data de-serialization
         f=open("pickled.txt","rb")
         data=pickle.load(f)
-        print (data)
         f.close()
 
         # load maps with data from the pickle file # data we got after the python2 tagger and post-processing
@@ -24,8 +23,14 @@ class feedback:
 
         self.speech = speech() # Initialize the speech objcect to be able to access the speak and listen fucntionality of the speech bot
 
-        self.getAndSaveFeedbackWithScore() # load and save the feedback content
-
+        # to prompt with example types to say
+        # self.repairTypesFound = []
+        # if self.rpnsub!={}:
+        #     self.repairTypesFound.append("substitution")
+        # if self.rpndel!={}:
+        #     self.repairTypesFound.append("deletion")
+        # if self.rpnrep!={}:
+        #     self.repairTypesFound.append("repetition")
 
     def getAndSaveFeedbackWithScore(self):
         toSave="" # variable that will store the data as a string and at the end it will store it in the feedback.txt file
@@ -102,38 +107,59 @@ class feedback:
             ## use "a" to append the file
             with open("disfluencyScoreTracker.txt", "a") as disfluencyScoreTrackerFile:
                 disfluencyScoreTrackerFile.write(str(disfluencyScore)+"\n")
-            #######################################
-            ### Save feedback in a text file ######
-            with open('feedback.txt', 'w') as out:
-                out.writelines(toSave)
-                 # out.writelines(str(map))
+        #######################################
+        ### Save feedback in a text file ######
+        with open('feedback.txt', 'w') as out:
+            out.writelines(toSave)
+             # out.writelines(str(map))
 
     def readAll(self):
         with open('feedback.txt') as fp:
             for line in fp:
                 self.speech.speak(line)
 
-    def shortSummary(self, timeTaken):
-        self.speech.speak("Total time you spoke for is "+str(timeTaken))
-        self.speech.speak("Edit terms used: \n "+ str(self.edit_Terms) +"\n")
+    def shortSummary(self, totalTime, totalTimeTaken):
+        if totalTime<1.0:
+            seconds = int(totalTimeTaken)
+            print("Total Time Taken you sopke for is "+str(seconds)+" seconds")
+            self.speech.speak("Total Time Taken you sopke for is "+str(seconds)+" seconds")
+
+        else:
+            minutes, seconds = divmod(int(timeTaken * 60), 60)
+            print("Total Time Taken you spoke for is "+str(int(minutes))+" minutes and "+str(int(seconds))+" seconds")
+            self.speech.speak("Total Time Taken you sopke for is "+str(int(minutes))+" minutes and "+str(int(seconds))+" seconds")
+
+        if self.edit_Terms=={}:
+            print("Edit terms used: No edit terms found \n ")
+            self.speech.speak("Edit terms used: No edit terms found \n ")
+        else:
+            print(("Edit terms used: \n "+ str(self.edit_Terms) +"\n"))
+            self.speech.speak("Edit terms used: \n "+ str(self.edit_Terms) +"\n")
         # Types of repairs found
         if self.rpnsub=={} and self.rpnrep=={} and self.rpndel=={}:
+            print("No repair disfluency types are present in your speech.")
             self.speech.speak("No repair disfluency types are present in your speech.")
         else:
+            print("Types of repair/s found are:")
             self.speech.speak("Types of repair/s found are:")
             if self.rpnsub!={}:
+                print("Substitution Repair")
                 self.speech.speak("Substitution Repair")
             if self.rpnrep!={}:
+                print("Repitition repair")
                 self.speech.speak("Repitition repair")
             if self.rpndel!={}:
+                print("Deletion repair")
                 self.speech.speak("Deletion repair")
 
     def detailedReport(self):
         # no disfluency types are detected
         if self.rpnsub=={} and self.rpnrep=={} and self.rpndel=={}:
+            print("No detailed report to be discussed.")
             self.speech.speak("No detailed report to be discussed.")
             return
 
+        print("What type of disfluency would you like to hear the detailed report for")
         self.speech.speak("What type of disfluency would you like to hear the detailed report for")
         # if self.rpnsub!={}:
         #     self.speech.speak("Substitution Repair")
@@ -142,7 +168,8 @@ class feedback:
         # if self.rpndel!={}:
         #     self.speech.speak("Deletion repair")
 
-        readWhat = self.speech.listen("Say the name, example: Substitution. Or say exit to exit feedback report discussion.").lower()
+        print("Say the name of the repair disfluency. Or say quit or bye to exit this feedback report discussion.")
+        readWhat = self.speech.listen("Say the name of the repair disfluency. Or say quit or bye to exit this feedback report discussion.").lower()
 
         correctAnswer=False
         exit=False
@@ -159,14 +186,14 @@ class feedback:
                 if self.rpnrep!={}:
                     self.readRep()
                 else:
-                    self.speech.speak("No Substitution repair sentences found.")
+                    self.speech.speak("No repetition repair sentences found.")
                 correctAnswer=True
 
             elif readWhat=="deletion":
                 if self.rpndel!={}:
                     self.readDel()
                 else:
-                    self.speech.speak("No Substitution repair sentences found.")
+                    self.speech.speak("No deletion repair sentences found.")
                 correctAnswer=True
 
             elif readWhat=="exit" or readWhat=="bye" or readWhat=="quit":
@@ -175,50 +202,60 @@ class feedback:
 
             else:
                 print("yes or no")
-                readWhat = self.speech.listen("Say the name, example: Substitution. Or say exit to exit feedback report discussion.").lower()
+                readWhat = self.speech.listen("Say the name of the repair disfluency.  Or say quit or bye to exit this feedback report discussion.").lower()
 
             if exit==False and correctAnswer==True: # if the option selected by user is correct but they still want to keep discussing the
                 correctAnswer = False
-                readWhat = self.speech.listen("What would you like to discuss next, say the name of the repair type, example: Deletion or say exit or bye to quit feedback report discussion.").lower()
+                print("What would you like to discuss next, say the name of the repair type of the repair disfluency. Or say quit or bye to exit this feedback report discussion.")
+                readWhat = self.speech.listen("What would you like to discuss next, say the name of the repair type of the repair disfluency.  Or say quit or bye to exit this feedback report discussion.").lower()
 
 
     def readSub(self):
         id = 1
         if self.rpnsub!={}:
+            print("Substitution repairs: ")
             self.speech.speak("Substitution repairs: ")
             for key in self.rpnsub.keys():
                 mistake = self.getReparandum(key)
                 repair = self.getSubstitution(key)
                 repairSent = self.getSentence(key)
+                print(str(id)+". \nMistake: "+mistake+"\t \nCorrection: "+repair+"\t \nIn the sentence: "+repairSent+"\n")
                 self.speech.speak(str(id)+". \nMistake: "+mistake+"\t \nCorrection: "+repair+"\t \nIn the sentence: "+repairSent+"\n")
                 id +=1
         else:
+            print("No Substitution repairs found.")
             self.speech.speak("No Substitution repairs found.")
 
     def readRep(self):
         id = 1
         if self.rpnrep!={}:
+            print("Repitition repairs: ")
             self.speech.speak("Repitition repairs: ")
             for key in self.rpnrep.keys():
                 mistake = self.getReparandum(key)
                 repair = self.getRepitition(key)
                 repairSent = self.getSentence(key)
+                print(str(id)+". \nWord: "+mistake+"\t \nRepitition: "+repair+"\t \nIn the sentence: "+repairSent+"\n")
                 self.speech.speak(str(id)+". \nWord: "+mistake+"\t \nRepitition: "+repair+"\t \nIn the sentence: "+repairSent+"\n")
                 id +=1
         else:
+            print("No Repitition repairs found.")
             self.speech.speak("No Repitition repairs found.")
 
     def readDel(self):
         id = 1
         if self.rpndel!={}:
+            print
             self.speech.speak("Deletion repairs: ")
             for key in self.rpndel.keys():
                 mistake = self.getReparandum(key)
                 repair = self.getDeletion(key)
                 repairSent = self.getSentence(key)
+                print(str(id)+". \nMistake: "+mistake+"\t \nIn the sentence: "+repairSent+"\n")
                 self.speech.speak(str(id)+". \nMistake: "+mistake+"\t \nIn the sentence: "+repairSent+"\n")
                 id +=1
         else:
+            print("No Deletion repairs found.")
             self.speech.speak("No Deletion repairs found.")
 
     def getReparandum(self, key):
