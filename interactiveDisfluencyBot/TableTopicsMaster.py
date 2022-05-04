@@ -73,7 +73,7 @@ class TableTopicsMaster:
     def randomQuestionGenerator(self):
         correctAnswer=False
         question = ""
-        print("Please select a theme: \n1.fun \n2.interesting \n3.summer \n4.fall \n5.winter \n6.spring \nEnter a number corresponding to the theme. [1 to 6]:")
+        print("Please select a theme: \n1.fun \n2.interesting \n3.summer \n4.fall \n5.winter \n6.spring \nSay a number corresponding to the theme. [1 to 6]:")
         self.speech.speak("Please select a theme: 1 fun. 2 interesting. 3 summer. 4 fall. 5 winter. 6 spring.")
         while(not correctAnswer):
             try:

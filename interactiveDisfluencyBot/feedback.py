@@ -1,6 +1,6 @@
 import pickle
 from speech import speech
-
+from playsound import playsound
 
 class feedback:
 
@@ -22,15 +22,6 @@ class feedback:
         self.edit_Terms = data[8] # Types of edit terms used and their count
 
         self.speech = speech() # Initialize the speech objcect to be able to access the speak and listen fucntionality of the speech bot
-
-        # to prompt with example types to say
-        # self.repairTypesFound = []
-        # if self.rpnsub!={}:
-        #     self.repairTypesFound.append("substitution")
-        # if self.rpndel!={}:
-        #     self.repairTypesFound.append("deletion")
-        # if self.rpnrep!={}:
-        #     self.repairTypesFound.append("repetition")
 
     def getAndSaveFeedbackWithScore(self):
         toSave="" # variable that will store the data as a string and at the end it will store it in the feedback.txt file
@@ -72,15 +63,6 @@ class feedback:
                     toSave+=str(id)+". \nWord: "+mistake+"\t \nRepitition: "+repair+"\t \nIn the sentence: "+repairSent+"\n"
                     id +=1
 
-                # if self.rpEnd=={}:
-                #     for i in range(self.rpStart[key], len(self.words)):
-                #         repair+=self.words[i]+" "
-                # else:
-                #     for i in range(self.rpStart[key], self.rpEnd[key]+1):
-                #         repair+=self.words[i]+" "
-                ####### If asked for the sentence in which the repair was done ######
-
-
             ###############################################################
             ###### Naive FLUENCY SCORE
             if '<f/>' in self.map.keys(): # set a weighted values for fluency score
@@ -118,20 +100,46 @@ class feedback:
             for line in fp:
                 self.speech.speak(line)
 
+        #######Ask if they want to listen to their speech
+        print("Would you like to listen to your speech again [yes/no] \n The audio will only be available for this current session: ")
+        listenToSpeech = self.speech.listen("Would you like to listen to your speech that was recorded \n The audio will only be available for this current session. Say yes or no. ").lower()
+        correctAnswer=False
+        while(not correctAnswer):
+            if listenToSpeech=="yes":
+                self.replayAudio()
+
+            elif listenToSpeech=="no":
+                correctAnswer=True
+
+            else:
+                print("yes or no")
+                listenToSpeech = self.speech.listen("Say yes or no").lower()
+
+    def replayAudio(self):
+        self.speech.speak("playing sound audio")
+
+        # for playing note.wav file
+        playsound('output.wav')
+
+        print("bye~")
+        self.speech.speak("Finished playing the recording.")
+        correctAnswer=True
+
+
     def shortSummary(self, totalTime, totalTimeTaken):
         if totalTime<1.0:
             seconds = int(totalTimeTaken)
-            print("Total Time Taken you sopke for is "+str(seconds)+" seconds")
-            self.speech.speak("Total Time Taken you sopke for is "+str(seconds)+" seconds")
+            print("Total Time you spoke for is "+str(seconds)+" seconds")
+            self.speech.speak("Total Time you spoke for is "+str(seconds)+" seconds")
 
         else:
-            minutes, seconds = divmod(int(timeTaken * 60), 60)
-            print("Total Time Taken you spoke for is "+str(int(minutes))+" minutes and "+str(int(seconds))+" seconds")
-            self.speech.speak("Total Time Taken you sopke for is "+str(int(minutes))+" minutes and "+str(int(seconds))+" seconds")
+            minutes, seconds = divmod(int(totalTime * 60), 60)
+            print("Total Time you spoke for is "+str(int(minutes))+" minutes and "+str(int(seconds))+" seconds")
+            self.speech.speak("Total Time you spoke for is "+str(int(minutes))+" minutes and "+str(int(seconds))+" seconds")
 
         if self.edit_Terms=={}:
-            print("Edit terms used: No edit terms found \n ")
-            self.speech.speak("Edit terms used: No edit terms found \n ")
+            print("No edit terms used \n ")
+            self.speech.speak("No edit terms used \n ")
         else:
             print(("Edit terms used: \n "+ str(self.edit_Terms) +"\n"))
             self.speech.speak("Edit terms used: \n "+ str(self.edit_Terms) +"\n")
@@ -140,8 +148,8 @@ class feedback:
             print("No repair disfluency types are present in your speech.")
             self.speech.speak("No repair disfluency types are present in your speech.")
         else:
-            print("Types of repair/s found are:")
-            self.speech.speak("Types of repair/s found are:")
+            print("Types of repair/s found in your speech are:")
+            self.speech.speak("Types of repair/s found in your speech are:")
             if self.rpnsub!={}:
                 print("Substitution Repair")
                 self.speech.speak("Substitution Repair")
@@ -168,32 +176,36 @@ class feedback:
         # if self.rpndel!={}:
         #     self.speech.speak("Deletion repair")
 
-        print("Say the name of the repair disfluency. Or say quit or bye to exit this feedback report discussion.")
-        readWhat = self.speech.listen("Say the name of the repair disfluency. Or say quit or bye to exit this feedback report discussion.").lower()
+        print("Say the name of the repair disfluency.Or say replay audio to listen to your speech. Or say quit or bye to exit this feedback report discussion.")
+        readWhat = self.speech.listen("Say the name of the repair disfluency. Or say replay audio to listen to your speech. Or say quit or bye to exit this feedback report discussion.").lower()
 
         correctAnswer=False
         exit=False
 
         while((not correctAnswer) and (not exit)):
-            if readWhat=="substitution":
+            if readWhat=="substitution" or readWhat=="substitution repair":
                 if self.rpnsub!={}:
                     self.readSub()
                 else:
                     self.speech.speak("No Substitution repair sentences found.")
                 correctAnswer=True
 
-            elif readWhat=="repetition":
+            elif readWhat=="repetition" or readWhat=="repetition repair":
                 if self.rpnrep!={}:
                     self.readRep()
                 else:
                     self.speech.speak("No repetition repair sentences found.")
                 correctAnswer=True
 
-            elif readWhat=="deletion":
+            elif readWhat=="deletion" or readWhat=="deletion repair":
                 if self.rpndel!={}:
                     self.readDel()
                 else:
                     self.speech.speak("No deletion repair sentences found.")
+                correctAnswer=True
+
+            elif readWhat=="replay audio" or readWhat=="replay":
+                self.replayAudio()
                 correctAnswer=True
 
             elif readWhat=="exit" or readWhat=="bye" or readWhat=="quit":
@@ -202,12 +214,12 @@ class feedback:
 
             else:
                 print("yes or no")
-                readWhat = self.speech.listen("Say the name of the repair disfluency.  Or say quit or bye to exit this feedback report discussion.").lower()
+                readWhat = self.speech.listen("Say the name of the repair disfluency. Or say replay audio to listen to your speech.  Or say quit or bye to exit this feedback report discussion.").lower()
 
             if exit==False and correctAnswer==True: # if the option selected by user is correct but they still want to keep discussing the
                 correctAnswer = False
-                print("What would you like to discuss next, say the name of the repair type of the repair disfluency. Or say quit or bye to exit this feedback report discussion.")
-                readWhat = self.speech.listen("What would you like to discuss next, say the name of the repair type of the repair disfluency.  Or say quit or bye to exit this feedback report discussion.").lower()
+                print("What would you like to discuss next, say the name of the repair type of the repair disfluency. Or say replay audio to listen to your speech. Or say quit or bye to exit this feedback report discussion.")
+                readWhat = self.speech.listen("What would you like to discuss next, say the name of the repair type of the repair disfluency. Or say replay audio to listen to your speech. Or say quit or bye to exit this feedback report discussion.").lower()
 
 
     def readSub(self):
@@ -279,15 +291,12 @@ class feedback:
         return repair
 
     def getDeletion(self, key):
-        repair = ""
-        for i in range(self.rpStart[key], self.rpndel[key]+1):
-            repair+="This is a deletion repair statement."
-        return repair
+        return "This is a deletion repair statement."
 
     def getSentence(self, key):
-        sent = ""
+        sentence = ""
         for k in range(self.repairSentence[key], len(self.words)):
-            sent+=self.words[k]+" "
+            sentence+=self.words[k]+" "
             if self.words[k].find('.')!=-1:
                 break
-        return sent
+        return sentence

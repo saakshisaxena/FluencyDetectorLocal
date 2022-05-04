@@ -17,6 +17,61 @@ from speech import speech
 from ibm_cloud_sdk_core.authenticators import IAMAuthenticator
 from ibm_watson import SpeechToTextV1
 
+def showDisfluencyScoreTracker(speech):
+    ### Plot a graph of disfluency score
+    print("Would you like to see your progress/ score tracker")
+    showScoreTracker = speech.listen("Would you like to see your progress/ score tracker. Say 'yes' or 'no'").lower()
+    correctAnswer=False
+    while(not correctAnswer):
+        if showScoreTracker=="yes":
+            speech.speak("Please see your progress in the graph pop up")
+            x = [] # attemp number
+            y = []
+            for line in open("disfluencyScoreTracker.txt", 'r'):
+                y.append(int(line)) # score
+            x = range(1, len(y)+1)
+
+            plt.title("Disfluency Score Tracking")
+            plt.xlabel('Attempt number')
+            plt.ylabel('Score')
+            plt.yticks(y)
+            plt.plot(x, y, marker = 'o', c = 'g')
+
+            plt.show()
+            correctAnswer=True
+
+        elif showScoreTracker=="no":
+            correctAnswer=True
+
+        else:
+            print("yes/no")
+            showScoreTracker = speech.listen("Say yes or no").lower()
+
+
+def feedbackLoop(totalTime, totalTimeTaken, speech):
+    feedbackVar = feedback()
+    feedbackVar.getAndSaveFeedbackWithScore()
+
+    print("Do you want to read all feedback at once or go through it in steps? Say yes or no")
+    readAll = speech.listen("Do you want to read all feedback at once or go through it in steps? Say yes, to read feedback altogether, or no, to go through it in steps.").lower()
+    correctAnswer=False
+    while(not correctAnswer):
+        if readAll=="yes":
+            feedbackVar.readAll() # Read the feedback text file that was stored
+            correctAnswer=True
+            speech.speak("You can see the full feedback report saved as a text file.")
+
+        elif readAll=="no":
+            print("Okay here is a short summary with types of repairs found:")
+            speech.speak("Okay, here is a short summary with types of repairs found:")
+            feedbackVar.shortSummary(totalTime, totalTimeTaken)
+            correctAnswer=True
+            feedbackVar.detailedReport()
+
+        else:
+            print("yes or no")
+            readAll = speech.listen("Say yes or no").lower()
+
 
 # Initialize speech object to be able to use speak and listen facilities from speech class
 speech = speech()
@@ -34,7 +89,7 @@ for i in range(5,0, -1):
 
 # Record voice via OS record system
 fs = 44100  # Sample rate
-seconds = 40  # Duration of recording # in seconds
+seconds = 9 # Duration of recording # in seconds
 
 print("Voice recording started!! \nPlease Start Speaking") # To print on console
 speech.speak("Voice recording started.")
@@ -78,39 +133,39 @@ else:
     with open('feedback.txt', 'w') as out:
         out.writelines("Short Summary: \n Total time taken for speech "+str(int(minutes))+" minutes and "+str(int(seconds))+" seconds \n")
 
-
+# trial at sentence formation
 transcript = ". ".join([res['results'][i]['alternatives'][0]['transcript'].strip() \
                         for i in range(0,len(res['results']))])
 
 # write the speech converted text in a text file
 with open('output.txt', 'w') as out:
      out.writelines(transcript)
-#
-# ################################################
-# #ASKING THE USER IF THEY WANT TO MAKE ANY CHANGES TO THE SPEECH TO TEXT OUTPUT FILE BEFORE RUNNING THE CLIENT
-# #########################################################
-# print("Would you like to see and make changes to the speech to text output?")
-# changeText = speech.listen("Would you like to see and make changes to the speech to text output? Say 'yes' or 'no'").lower()
-# correctAnswer = False
-# while(not correctAnswer):
-#     if changeText=="no":
-#         print("Analysing your speech~")
-#         speech.speak("Analysing your speech~")
-#         correctAnswer=True
-#     elif changeText=="yes":
-#         ###### Open the file in notepad and wait for the user to finish editing the file.
-#         print("Please save and close the notepad file after you are done cheking / making changes, to get the feedback.")
-#         speech.speak("Opening the file in notepad. Please save and close the notepad file after you are done cheking / making changes to progress.")
-#
-#         p = subprocess.Popen(('notepad',"output.txt"))
-#         p.wait()
-#         print("Analysing your speech~")
-#         speech.speak("Analysing your speech~")
-#         correctAnswer=True
-#     else:
-#         changeText = speech.listen("Say 'yes' or 'no'").lower()
-#         print("Say 'yes' or 'no'[Y/n]")
-#
+
+################################################
+#ASKING THE USER IF THEY WANT TO MAKE ANY CHANGES TO THE SPEECH TO TEXT OUTPUT FILE BEFORE RUNNING THE CLIENT
+#########################################################
+print("Would you like to see and make changes to the speech to text output?")
+changeText = speech.listen("Would you like to see and make changes to the speech to text output? Say 'yes' or 'no'").lower()
+correctAnswer = False
+while(not correctAnswer):
+    if changeText=="no":
+        print("Analysing your speech~")
+        speech.speak("Analysing your speech~")
+        correctAnswer=True
+    elif changeText=="yes":
+        ###### Open the file in notepad and wait for the user to finish editing the file.
+        print("Please save and close the notepad file after you are done cheking / making changes, to get the feedback.")
+        speech.speak("Opening the file in notepad. Please save and close the notepad file after you are done cheking / making changes to progress.")
+
+        p = subprocess.Popen(('notepad',"output.txt"))
+        p.wait()
+        print("Analysing your speech~")
+        speech.speak("Analysing your speech~")
+        correctAnswer=True
+    else:
+        changeText = speech.listen("Say 'yes' or 'no'").lower()
+        print("Say 'yes' or 'no'[Y/n]")
+
 # ################################################
 ###### Run the client side code now for socket to talk to py2 server
 client = Client()
@@ -122,83 +177,12 @@ client.closeAndPrint()
 #############################################
 #############################################
 ###Read the Feedback
-feedback = feedback()
-feedback.getAndSaveFeedbackWithScore()
-
-print("Do you want to read all feedback at once or go through it in steps? Say yes or no")
-readAll = speech.listen("Do you want to read all feedback at once or go through it in steps? Say yes, to read feedback altogether, or no, to go through it in steps.").lower()
-correctAnswer=False
-while(not correctAnswer):
-    if readAll=="yes":
-        feedback.readAll() # Read the feedback text file that was stored
-        correctAnswer=True
-        speech.speak("You can see the full feedback report saved as a text file.")
-
-    elif readAll=="no":
-        print("Okay here is a short summary with types of repairs found:")
-        speech.speak("Okay, here is a short summary with types of repairs found:")
-        feedback.shortSummary(totalTime, totalTimeTaken)
-        correctAnswer=True
-        feedback.detailedReport()
-
-    else:
-        print("yes or no")
-        readAll = speech.listen("Say yes or no").lower()
+feedbackLoop(totalTime, totalTimeTaken, speech)
 
 ############################################
 ############################################
 ### Plot a graph of disfluency score
-print("Would you like to see your progress/ score tracker")
-showScoreTracker = speech.listen("Would you like to see your progress/ score tracker. Say 'yes' or 'no'").lower()
-correctAnswer=False
-while(not correctAnswer):
-    if showScoreTracker=="yes":
-        speech.speak("Please see your progress in the graph pop up")
-        x = [] # attemp number
-        y = []
-        for line in open("disfluencyScoreTracker.txt", 'r'):
-            y.append(int(line)) # score
-        x = range(1, len(y)+1)
-
-        plt.title("Disfluency Score Tracking")
-        plt.xlabel('Attempt number')
-        plt.ylabel('Score')
-        plt.yticks(y)
-        plt.plot(x, y, marker = 'o', c = 'g')
-
-        plt.show()
-        correctAnswer=True
-
-    elif showScoreTracker=="no":
-        correctAnswer=True
-
-    else:
-        print("yes/no")
-        showScoreTracker = speech.listen("Say yes or no").lower()
-
-################################################
-#################################################
-#######Ask if they want to listen to their speech
-print("Would you like to listen to your speech again [yes/no] \n The audio will only be available for this current session: ")
-listenToSpeech = speech.listen("Would you like to listen to your speech that was recorded \n The audio will only be available for this current session. Say yes or no. ").lower()
-correctAnswer=False
-while(not correctAnswer):
-    if listenToSpeech=="yes":
-        speech.speak("playing sound audio")
-
-        # for playing note.wav file
-        playsound('output.wav')
-
-        print("bye~")
-        speech.speak("Finished playing the recording.")
-        correctAnswer=True
-
-    elif listenToSpeech=="no":
-        correctAnswer=True
-
-    else:
-        print("yes or no")
-        listenToSpeech = speech.listen("Say yes or no").lower()
+showDisfluencyScoreTracker(speech)
 
 ##############   END   ####################
 speech.speak("Goodbye")
