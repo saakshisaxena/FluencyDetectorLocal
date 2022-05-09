@@ -121,7 +121,6 @@ class feedback:
         # for playing note.wav file
         playsound('output.wav')
 
-        print("bye~")
         self.speech.speak("Finished playing the recording.")
         correctAnswer=True
 
@@ -213,7 +212,6 @@ class feedback:
                 correctAnswer=True
 
             else:
-                print("yes or no")
                 readWhat = self.speech.listen("Say the name of the repair disfluency. Or say replay audio to listen to your speech.  Or say quit or bye to exit this feedback report discussion.").lower()
 
             if exit==False and correctAnswer==True: # if the option selected by user is correct but they still want to keep discussing the
