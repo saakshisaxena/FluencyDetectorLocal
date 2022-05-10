@@ -89,7 +89,7 @@ for i in range(5,0, -1):
 
 # Record voice via OS record system
 fs = 44100  # Sample rate
-seconds = 9 # Duration of recording # in seconds
+seconds = 90 # Duration of recording # in seconds
 
 print("Voice recording started!! \nPlease Start Speaking") # To print on console
 speech.speak("Voice recording started.")
